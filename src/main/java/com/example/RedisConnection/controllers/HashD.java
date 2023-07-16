@@ -6,15 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.lang.String;
 
 @RestController
 @RequestMapping("/hash")
 public class HashD {
     @Autowired
     private RedisTemplate template;
-    Logger logger = LoggerFactory.getLogger(HashD.class);
+    final Logger logger = LoggerFactory.getLogger(HashD.class);
     @PostMapping
-    public java.lang.String save(@RequestParam String key, @RequestParam String field, @RequestParam String value)
+    public String save(@RequestParam String key, @RequestParam String field, @RequestParam String value)
     {
         logger.info("Inside save");
         template.opsForHash().put(key, field, value);
@@ -36,7 +37,7 @@ public class HashD {
         return template.opsForHash().entries(key);
     }
     @DeleteMapping("/{field}")
-    public java.lang.String deleteKey(@RequestParam String key, @PathVariable String field)
+    public String deleteKey(@RequestParam String key, @PathVariable String field)
     {
         logger.info("Inside save");
         logger.info("Save executed");

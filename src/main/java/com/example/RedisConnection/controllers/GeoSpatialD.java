@@ -7,18 +7,18 @@ import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
-
+import java.lang.String;
 
 @RestController
 @RequestMapping("/geoSpatial")
 public class GeoSpatialD {
 
-    Logger logger = LoggerFactory.getLogger(GeoSpatialD.class);
+    final Logger logger = LoggerFactory.getLogger(GeoSpatialD.class);
     @Autowired
     private RedisTemplate template;
 
     @PostMapping
-    public java.lang.String addGeoLocation(@RequestParam java.lang.String key, @RequestParam double longitude, @RequestParam double latitude, @RequestParam String member) {
+    public String addGeoLocation(@RequestParam String key, @RequestParam double longitude, @RequestParam double latitude, @RequestParam String member) {
         logger.info("Inside addGeoLocation");
         Point point = new Point(longitude, latitude);
         template.opsForGeo().add(key, point, member);

@@ -5,11 +5,9 @@ import com.example.RedisConnection.repositories.StudentRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -18,7 +16,7 @@ import java.util.List;
 public class StudentController {
     @Autowired
     private StudentRepo studentRepo;
-    Logger logger = LoggerFactory.getLogger(StudentController.class);
+    final Logger logger = LoggerFactory.getLogger(StudentController.class);
     @PostMapping
     public Student save(@RequestBody Student student) {
         logger.info("Inside save");

@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
-
+import java.lang.String;
 import java.util.Set;
 
 @RestController
@@ -12,9 +12,9 @@ import java.util.Set;
 public class SortedSetD {
     @Autowired
     private RedisTemplate template;
-    Logger logger = LoggerFactory.getLogger(SortedSetD.class);
+    final Logger logger = LoggerFactory.getLogger(SortedSetD.class);
     @PostMapping("/{key}")
-    public java.lang.String addToZSet(@PathVariable String key, @RequestParam String value, @RequestParam double score) {
+    public String addToZSet(@PathVariable String key, @RequestParam String value, @RequestParam double score) {
         logger.info("Inside addToZSet");
         template.opsForZSet().add(key, value, score);
         logger.info("addToZSet executed");

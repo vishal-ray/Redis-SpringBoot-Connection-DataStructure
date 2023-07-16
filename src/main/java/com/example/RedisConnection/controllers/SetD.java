@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.lang.String;
 
 import java.util.Set;
 
@@ -14,9 +14,9 @@ import java.util.Set;
 public class SetD<S> {
     @Autowired
     private RedisTemplate template;
-    Logger logger = LoggerFactory.getLogger(SetD.class);
+    final Logger logger = LoggerFactory.getLogger(SetD.class);
     @PostMapping()
-    public java.lang.String addToSet(@RequestParam String key, @RequestParam String value) {
+    public String addToSet(@RequestParam String key, @RequestParam String value) {
         logger.info("Inside addToSet");
         template.opsForSet().add(key, value);
         logger.info("addToSet executed");
@@ -31,7 +31,7 @@ public class SetD<S> {
     }
 
     @DeleteMapping
-    public java.lang.String removeFromSet(@RequestParam String key, @RequestParam String value) {
+    public String removeFromSet(@RequestParam String key, @RequestParam String value) {
         logger.info("Inside removeFromSet");
         template.opsForSet().remove(key, value);
         logger.info("removeFromSet executed");

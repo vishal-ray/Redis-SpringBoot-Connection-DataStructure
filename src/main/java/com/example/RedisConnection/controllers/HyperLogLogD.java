@@ -6,13 +6,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import java.lang.String;
 
 @RestController
 @RequestMapping("/hyperLogLog")
 public class HyperLogLogD {
     @Autowired
     private RedisTemplate template;
-    Logger logger = LoggerFactory.getLogger(HyperLogLogD.class);
+    final Logger logger = LoggerFactory.getLogger(HyperLogLogD.class);
     @PostMapping
     public String save(@RequestParam String key, @RequestParam String[] values)
     {
@@ -29,7 +30,7 @@ public class HyperLogLogD {
         return template.opsForHyperLogLog().size(key);
     }
     @DeleteMapping
-    public java.lang.String deleteKey(@RequestParam String key)
+    public String deleteKey(@RequestParam String key)
     {
         logger.info("Inside deleteKey");
         template.opsForHyperLogLog().delete(key);
