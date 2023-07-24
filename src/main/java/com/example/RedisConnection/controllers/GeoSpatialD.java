@@ -1,5 +1,6 @@
 package com.example.RedisConnection.controllers;
 
+import com.example.RedisConnection.POJO.GeoSpatialPOJO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.lang.String;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/geoSpatial")
@@ -18,25 +20,27 @@ public class GeoSpatialD {
     private RedisTemplate template;
 
     @PostMapping
-    public String addGeoLocation(@RequestParam String key, @RequestParam double longitude, @RequestParam double latitude, @RequestParam String member) {
-        logger.info("Inside addGeoLocation");
-        Point point = new Point(longitude, latitude);
-        template.opsForGeo().add(key, point, member);
-        logger.info("addGeoLocation executed");
+    public String addGeoLocation(@RequestBody GeoSpatialPOJO geoSpatialPOJO){
+        logger.info("New GeoSpatial-Values about to be saved");
+        Point point = new Point(geoSpatialPOJO.getLongitude(), geoSpatialPOJO.getLatitude());
+        template.opsForGeo().add(geoSpatialPOJO.getKey(), point, geoSpatialPOJO.getMember1());
+        if(geoSpatialPOJO.getTimeDuration() != null)
+            template.expire(geoSpatialPOJO.getKey(),geoSpatialPOJO.getTimeDuration(), TimeUnit.valueOf(geoSpatialPOJO.getUnitOfTime()));
+        logger.info("GeoSpatial-Value saved");
         return "Added";
     }
     @GetMapping("/inBetweenDistance")
-    public Distance calculateDistance(@RequestParam String  key, @RequestParam String member1, @RequestParam String member2) {
-        logger.info("Inside inBetweenDistance");
-
-        logger.info("inBetweenDistance executed");
-        return template.opsForGeo().distance(key, member1, member2);
+    public Distance calculateDistance(@RequestBody GeoSpatialPOJO geoSpatialPOJO) {
+        logger.info("Retrieving the In Between Distance");
+        logger.info("In Between Distance Retrieved");
+        return template.opsForGeo().distance(geoSpatialPOJO.getKey(), geoSpatialPOJO.getMember1(), geoSpatialPOJO.getMember2());
     }
     @DeleteMapping()
-    public void removeGeoLocation(@RequestParam String key, @RequestParam String[] members) {
-        logger.info("Inside removeGeoLocation");
+    public String removeGeoLocation(@RequestBody GeoSpatialPOJO geoSpatialPOJO) {
+        logger.info("Process of GeoSpatial Variable->Members Deletion Begins");
 
-        logger.info("removeGeoLocation executed");
-        template.opsForGeo().remove(key, members);
+        logger.info("GeoSpatial Variable->Members Deleted");
+        template.opsForGeo().remove(geoSpatialPOJO.getKey(), geoSpatialPOJO.getMembers());
+        return "Deleted";
     }
 }
